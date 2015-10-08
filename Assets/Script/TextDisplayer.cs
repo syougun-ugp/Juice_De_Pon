@@ -49,6 +49,7 @@ public class TextDisplayer : MonoBehaviour {
         text = GetComponent<Text>();
         text.text = "";
         tapImage.gameObject.SetActive(false);
+
 	}
 
 	void Update () 
@@ -61,21 +62,23 @@ public class TextDisplayer : MonoBehaviour {
     void NextClick()
     {
         if (!canNextClick) return;
+        //if (!Input.GetMouseButtonDown(0)) return;
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            ChangeBackGround();
+        ScenarioFinish();
 
-            text.text = string.Empty;
-            canNextClick = false;
-            index += 2;
-            tapImage.gameObject.SetActive(false);
-        }
+        ChangeBackGround();
+
+        text.text = string.Empty;
+        canNextClick = false;
+        index += 2;
+        tapImage.gameObject.SetActive(false);
+
     }
 
     void AutoShowText()
     {
         if (!autoShowText) return;
+        if (IsFinish()) return;
 
         index++;
 
@@ -92,6 +95,7 @@ public class TextDisplayer : MonoBehaviour {
     void ShowText()
     {
         if (canNextClick || autoShowText) return;
+        if (IsFinish()) return;
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -111,6 +115,8 @@ public class TextDisplayer : MonoBehaviour {
 
     bool IsNextClick()
     {
+        if (IsFinish()) return false;
+
         if (textAsset.text[index] == '@')
         {
             index++;
@@ -118,21 +124,47 @@ public class TextDisplayer : MonoBehaviour {
             tapImage.gameObject.SetActive(true);
             return true;
         }
+
         return false;
     }
 
-
     void ChangeBackGround()
     {
-        if (textAsset.text[index] == '#')
-        {
-            index++;
-            backGroundID++;
-            if (backGroundID >= type.backGround.Count) return;
+        if (IsFinish()) return;
+        if (textAsset.text[index] != '#') return;
 
-            backGround.sprite = type.backGround[backGroundID];
+        index++;
+        var id = int.Parse(textAsset.text[index].ToString()) - 1;
+
+        if (id >= type.backGround.Count || id < 0)
+        {
+            Debug.LogError("シナリオの#番号が登録画像IDと違います : " + id);
+            return;
         }
+
+        index++;
+        backGround.sprite = type.backGround[id];
         
     }
 
+    bool IsFinish()
+    {
+        if (textAsset.text.Length <= index)
+        {
+            return true;
+        }
+
+        return false;
+
+    }
+
+    void ScenarioFinish()
+    {
+        if (IsFinish())
+        {
+            SceneManager.Instance.StartChange(SceneNameManager.Scene.Main, new FadeTimeData(1, 1));
+
+            enabled = false;
+        }
+    }
 }
