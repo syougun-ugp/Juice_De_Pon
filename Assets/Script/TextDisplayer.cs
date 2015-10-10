@@ -48,7 +48,7 @@ public class TextDisplayer : MonoBehaviour {
 
         text = GetComponent<Text>();
         text.text = "";
-        tapImage.gameObject.SetActive(false);
+        tapImage.enabled = false;
 
 	}
 
@@ -62,7 +62,7 @@ public class TextDisplayer : MonoBehaviour {
     void NextClick()
     {
         if (!canNextClick) return;
-        //if (!Input.GetMouseButtonDown(0)) return;
+        if (!Input.GetMouseButtonDown(0)) return;
 
         ScenarioFinish();
 
@@ -71,7 +71,7 @@ public class TextDisplayer : MonoBehaviour {
         text.text = string.Empty;
         canNextClick = false;
         index += 2;
-        tapImage.gameObject.SetActive(false);
+        tapImage.enabled = false;
 
     }
 
@@ -121,7 +121,7 @@ public class TextDisplayer : MonoBehaviour {
         {
             index++;
             canNextClick = true;
-            tapImage.gameObject.SetActive(true);
+            tapImage.enabled = true;
             return true;
         }
 
