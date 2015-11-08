@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System;
 
 public class PurchaseManager : MonoBehaviour {
 
@@ -49,8 +50,11 @@ public class PurchaseManager : MonoBehaviour {
         PurchaseType = Type.Oolong;
     }
 
+    public static Image PurchaseImage { get; set; }
+
     public void SetPurchaseType(Button button,Type type)
     {
+        PurchaseImage = Array.Find(FindObjectsOfType<JuiceType>(), i => i.name == type.ToString()).GetComponent<Image>();
         PurchaseType = type;
         AllButtonDisable();
         button.image.sprite = onPushButtonSprite;

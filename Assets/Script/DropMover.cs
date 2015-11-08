@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class DropMover : MonoBehaviour {
 
@@ -20,6 +21,7 @@ public class DropMover : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        GetComponent<Image>().sprite = PurchaseManager.PurchaseImage.sprite;
         iTween.MoveTo(gameObject, iTween.Hash("y", transform.position.y - dropPoint, "time", moveTime, "delay", delayTime, "easetype", easeType));
         StartCoroutine("WaitStartZoom");
     }
